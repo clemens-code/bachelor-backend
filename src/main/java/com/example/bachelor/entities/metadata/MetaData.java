@@ -4,14 +4,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Map;
+import java.util.Collection;
 
-@Document
+@Document(collection = "testMongo")
 public class MetaData {
 
     @Id
     @GeneratedValue
-    public Long id;
+    public Long _id;
 
     public String information;
 
@@ -25,13 +25,13 @@ public class MetaData {
     }
 
     public MetaData(Long id, String information, String path) {
-        this.id = id;
+        this._id = id;
         this.information = information;
         this.path = path;
     }
 
-    public Long getId() {
-        return id;
+    public Long get_id() {
+        return _id;
     }
 
     public String getInformation() {
