@@ -3,20 +3,21 @@ package com.example.bachelor.entities.user;
 import javax.persistence.*;
 
 @Entity
+@Table (name="users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String userName;
     private String role;
     private String password;
 
     public User(){}
 
-    public User(String name, String role, String password) {
-        this.name = name;
+    public User(String userName, String role, String password) {
+        this.userName = userName;
         this.role = role;
         this.password = password;
     }
@@ -29,12 +30,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String name) {
+        this.userName = name;
     }
 
     public String getRole() {
