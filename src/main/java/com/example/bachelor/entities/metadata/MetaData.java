@@ -4,7 +4,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Collection;
 
 @Document(collection = "testMongo")
 public class MetaData {
@@ -13,18 +12,18 @@ public class MetaData {
     @GeneratedValue
     public Long _id;
 
-    public String information;
+    public Object information;
 
     public String path;
 
     public MetaData(){}
 
-    public MetaData(String information, String path) {
+    public MetaData(Object information, String path) {
         this.information = information;
         this.path = path;
     }
 
-    public MetaData(Long id, String information, String path) {
+    public MetaData(Long id, Object information, String path) {
         this._id = id;
         this.information = information;
         this.path = path;
@@ -34,11 +33,11 @@ public class MetaData {
         return _id;
     }
 
-    public String getInformation() {
+    public Object getInformation() {
         return information;
     }
 
-    public void setInformation(String information) {
+    public void setInformation(Object information) {
         this.information = information;
     }
 

@@ -14,19 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class MainPageController {
+public class InformationController {
 
-    @Autowired
-    private JwtUtil jwtUtil;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
     @Autowired
     private MetadataRepository metadataRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
 
     @CrossOrigin
@@ -36,17 +29,5 @@ public class MainPageController {
         return  metadataRepository.findAll();
     }
 
-    @PostMapping("/authenticate")
-    public String generateToken(@RequestBody User user) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword())
-            );
-        }catch (Exception e)
-        {
-            throw new Exception("Invalid Username or Password!");
-        }
-        return jwtUtil.generateToken(user.getUserName());
-    }
 
 }
