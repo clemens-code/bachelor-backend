@@ -25,11 +25,17 @@ public class MetadataSaveServiceImpl implements MetadataSaveService {
 
     private ImageSaveServiceImpl imageSaveService;
 
-    @Override
-    public MetaData saveMetaData(Object metaDataInformation, Long id, MultipartFile image) {
+    private SequenceGenerationServiceImpl sequenceGenerationService;
 
+    @Override
+    public MetaData saveMetaData(Object metaDataInformation, long id, MultipartFile image) {
         try {
-            return metadataRepository.save(new MetaData(id, metaDataInformation, saveImage(image)));
+            MetaData metaData = new MetaData.Builder()
+                    .withID(id)
+                    .withInformation(metaDataInformation)
+                    .withPath(saveImage(image))
+                    .build();
+            return metadataRepository.save(metaData);
         }catch(IOException e){
             LOG.error("Error during saving the Image {}. No data were persisted in the database", image.getName(), e);
         }
@@ -39,7 +45,12 @@ public class MetadataSaveServiceImpl implements MetadataSaveService {
     @Override
     public MetaData saveMetaData(Object metaDataInformation, MultipartFile image) {
         try {
-            return metadataRepository.save(new MetaData(metaDataInformation, saveImage(image)));
+            MetaData metaData = new MetaData.Builder()
+                    .withID(sequenceGenerationService.generateSequence(MetaData.SEQUENCE_NAME))
+                    .withInformation(metaDataInformation)
+                    .withPath(saveImage(image))
+                    .build();
+            return metadataRepository.save(metaData);
         }catch (IOException e)
         {
             LOG.error("Error during saving the Image {}. No data were persisted in the database", image.getName(), e);
@@ -49,6 +60,11 @@ public class MetadataSaveServiceImpl implements MetadataSaveService {
 
     private String saveImage(MultipartFile image) throws IOException{
         return imageSaveService.saveImage(image);
+    }
+
+    @Resource
+    public void setSequenceGenerationService(SequenceGenerationServiceImpl sequenceGenerationService){
+        this.sequenceGenerationService=sequenceGenerationService;
     }
 
     @Resource

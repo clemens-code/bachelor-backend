@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/data-api")
+@RequestMapping(value = "/data/create")
 public class DataReceiveController {
 
     private MetadataSaveServiceImpl metadataSaveService;
@@ -29,7 +29,7 @@ public class DataReceiveController {
         return null;
     }
 
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/")
     public ResponseEntity<MetaData> create(@RequestPart(required = true) Object metaDataInformation,
                                            @RequestPart(value = "image", required = true) final MultipartFile image){
         MetaData createdMetaData = metadataSaveService.saveMetaData(metaDataInformation, image);
