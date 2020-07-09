@@ -2,7 +2,7 @@ package com.example.bachelor.controller;
 
 
 import com.example.bachelor.entities.metadata.MetaData;
-import com.example.bachelor.service.impl.MetadataSaveServiceImpl;
+import com.example.bachelor.service.impl.MetaDataServiceImpl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.Resource;
-import java.awt.*;
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.Objects;
 
@@ -18,21 +18,23 @@ import java.util.Objects;
 @RequestMapping(value = "/data/create")
 public class DataReceiveController {
 
-    private MetadataSaveServiceImpl metadataSaveService;
+    private MetaDataServiceImpl metadataSaveService;
 
     @PutMapping(value = "/{id}", produces = MediaType.ALL_VALUE)
     public String receiveData(@RequestPart(required = true) Object metaDataInformation,
                               @RequestPart(value = "image", required = true) final MultipartFile image,
-                              @PathVariable String id){
+                              @PathVariable String id,
+                              HttpServletRequest servletRequest){
         Objects.requireNonNull(metaDataInformation, "the metadata information is not allowed to be null");
-        metadataSaveService.saveMetaData(metaDataInformation, Long.parseLong(id), image);
+        metadataSaveService.saveMetaData(metaDataInformation, Long.parseLong(id), image, servletRequest);
         return null;
     }
 
     @PostMapping(value = "/")
     public ResponseEntity<MetaData> create(@RequestPart(required = true) Object metaDataInformation,
-                                           @RequestPart(value = "image", required = true) final MultipartFile image){
-        MetaData createdMetaData = metadataSaveService.saveMetaData(metaDataInformation, image);
+                                           @RequestPart(value = "image", required = true) final MultipartFile image,
+                                           HttpServletRequest servletRequest){
+        MetaData createdMetaData = metadataSaveService.saveMetaData(metaDataInformation, image, servletRequest);
         if(createdMetaData == null){
             return ResponseEntity.notFound().build();
         }else {
@@ -42,7 +44,7 @@ public class DataReceiveController {
     }
 
     @Resource
-    public void setMetadataSaveService(MetadataSaveServiceImpl metadataSaveService){
+    public void setMetadataSaveService(MetaDataServiceImpl metadataSaveService){
         this.metadataSaveService=metadataSaveService;
     }
 

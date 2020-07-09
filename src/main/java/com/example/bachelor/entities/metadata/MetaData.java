@@ -16,6 +16,8 @@ public class MetaData {
         private long _id;
         private Object information;
         private String path;
+        private String owner;
+        private String group;
 
         public Builder(){}
 
@@ -37,12 +39,25 @@ public class MetaData {
             return this;
         }
 
+        public Builder withOwner(String owner){
+            this.owner=owner;
+
+            return this;
+        }
+
+        public Builder withGroup(String group){
+            this.group=group;
+
+            return this;
+        }
+
         public MetaData build() {
             MetaData metaData = new MetaData();
             metaData._id = this._id;
             metaData.information = this.information;
             metaData.path = this.path;
-
+            metaData.group=this.group;
+            metaData.owner=this.owner;
             return metaData;
         }
 
@@ -54,6 +69,8 @@ public class MetaData {
     public Long _id;
     public Object information;
     public String path;
+    public String owner;
+    public String group;
 
     private MetaData() {
     }
@@ -80,6 +97,22 @@ public class MetaData {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }
 

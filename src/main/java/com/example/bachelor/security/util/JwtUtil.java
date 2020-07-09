@@ -19,7 +19,6 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    //private String secret = "javatechie";
     private String secret;
 
     public JwtUtil(@Value("${jwt.secret}") String secret){
