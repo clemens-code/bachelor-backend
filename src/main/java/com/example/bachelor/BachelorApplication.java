@@ -14,9 +14,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 public class BachelorApplication {
 
-	@Autowired
-	private UserRepository repository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(BachelorApplication.class, args);
 	}

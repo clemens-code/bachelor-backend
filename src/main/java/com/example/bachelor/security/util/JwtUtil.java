@@ -1,8 +1,11 @@
 package com.example.bachelor.security.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,7 +22,9 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    private String secret;
+    private static final Logger LOG = LoggerFactory.getLogger(JwtUtil.class);
+
+    private final String secret;
 
     public JwtUtil(@Value("${jwt.secret}") String secret){
         this.secret=secret;
@@ -46,6 +51,7 @@ public class JwtUtil {
     }
 
     public String generateToken(String username) {
+        LOG.info("trying to generate Token");
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
@@ -57,6 +63,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+        LOG.info("Checking validation of Token");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }

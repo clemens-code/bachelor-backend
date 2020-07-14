@@ -1,12 +1,11 @@
 package com.example.bachelor.entities.metadata;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.query.Meta;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Objects;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Document(collection = "testMongo")
 public class MetaData {
@@ -33,8 +32,8 @@ public class MetaData {
             return this;
         }
 
-        public Builder withPath(String path) {
-            this.path = path;
+        public Builder withPath(Path path) {
+            this.path = path.toString();
 
             return this;
         }
@@ -91,12 +90,12 @@ public class MetaData {
         this.information = information;
     }
 
-    public String getPath() {
-        return path;
+    public Path getPath() {
+        return Paths.get(path);
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPath(Path path) {
+        this.path = path.toString();
     }
 
     public String getOwner() {
