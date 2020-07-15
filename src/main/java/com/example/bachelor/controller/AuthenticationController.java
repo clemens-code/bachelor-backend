@@ -32,7 +32,7 @@ public class AuthenticationController {
         }catch (Exception e)
         {
             LOG.error("Error during authentication!", e);
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("Invalid Username or Password!");
         }
         return ResponseEntity.ok().body(jwtUtil.generateToken(user.getUsername()));
         //ResponseEntity.ok().body(new ResponseUser(user.getUsername(), jwtUtil.generateToken(user.getUsername())));
