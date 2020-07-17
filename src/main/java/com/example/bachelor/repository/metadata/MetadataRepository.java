@@ -8,11 +8,10 @@ import java.util.Optional;
 
 public interface MetadataRepository extends MongoRepository<MetaData, Long> {
 
-    List<MetaData> findByOwner(String owner);
+    List<MetaData> findByOwner(final String owner);
 
-    List<MetaData> findByOwnerAndGroup(String owner, String group);
+    List<MetaData> findByOwnerAndGroup(final String owner, String group);
 
-    Optional<MetaData> findBy_id(long id);
-
+    Optional<MetaData> findBy_idAndOwner(final long _id,final String owner);
 
 }

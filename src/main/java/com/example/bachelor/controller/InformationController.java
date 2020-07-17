@@ -2,11 +2,12 @@ package com.example.bachelor.controller;
 
 
 import com.example.bachelor.entities.metadata.MetaData;
-import com.example.bachelor.entities.response.ResponseDataWithImageObject;
-import com.example.bachelor.entities.user.User;
 import com.example.bachelor.service.impl.MetaDataServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,28 +32,27 @@ public class InformationController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/group")
-    public List<MetaData> infosByGroup(HttpServletRequest servletRequest){
+    @GetMapping(value = "/group/{group}")
+    public List<MetaData> infosByGroup(@PathVariable String group,  HttpServletRequest servletRequest){
         return metaDataService.getAllMetaDataByGroup(servletRequest);
     }
 
     @CrossOrigin
     @GetMapping(value = "/id/{id}")
-    public Optional<MetaData> infoById(@PathVariable String id){
-        return metaDataService.getMetaDataById(Long.parseLong(id));
+    public Optional<MetaData> infoById(@PathVariable String id, HttpServletRequest servletRequest){
+        return metaDataService.getMetaDataById(Long.parseLong(id), servletRequest);
     }
 
     @CrossOrigin
     @GetMapping(value = "/image/{id}")
     @ResponseBody
-    public ResponseEntity<ResponseDataWithImageObject> infoWithImage(@PathVariable String id) {
-        ResponseDataWithImageObject data = metaDataService.getMetaDataAndImageForId(Long.parseLong(id));
-        if(data != null){
-            return ResponseEntity.ok().body(data);
-        }else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<byte[]> infoWithImage(@PathVariable String id, HttpServletRequest servletRequest) {
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<byte[]>(metaDataService.getImageForId(Long.parseLong(id), servletRequest), headers, HttpStatus.OK);
+        //return new ResponseEntity<>(metaDataService.getImage(Long.parseLong(id), servletRequest), headers, HttpStatus.OK);
     }
+
 
     @Resource
     public void setMetaDataService(MetaDataServiceImpl metaDataService){

@@ -2,10 +2,10 @@ package com.example.bachelor.service.impl;
 
 
 import com.example.bachelor.entities.metadata.MetaData;
-import com.example.bachelor.entities.response.ResponseDataWithImageObject;
 import com.example.bachelor.repository.metadata.MetadataRepository;
 import com.example.bachelor.security.util.JwtUtil;
 import com.example.bachelor.service.MetaDataService;
+import org.bson.internal.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -79,24 +83,36 @@ public class MetaDataServiceImpl implements MetaDataService {
     }
 
     @Override
-    public Optional<MetaData> getMetaDataById(long _id) {
-        return metadataRepository.findBy_id(_id);
+    public Optional<MetaData> getMetaDataById(long _id, HttpServletRequest servletRequest) {
+        return metadataRepository.findBy_idAndOwner(_id, getUserFromRequest(servletRequest));
     }
 
     @Override
-    public ResponseDataWithImageObject getMetaDataAndImageForId(long _id){
-        Optional<MetaData> dataForId = metadataRepository.findBy_id(_id);
-        if(dataForId.isPresent()) {
-            try {
-                return new ResponseDataWithImageObject(imageService.getImage(dataForId.get().getPath()), dataForId.get());
-            }catch (IOException e){
-                LOG.error("Error occurred during reading image from filesystem!",e);
-                return null;
+    public byte[] getImageForId(long _id, HttpServletRequest servletRequest){
+        Optional<MetaData> metaData = metadataRepository.findBy_idAndOwner(_id, getUserFromRequest(servletRequest));
+        if(metaData.isPresent()){
+            try{
+                return imageService.getImage(metaData.get().getPath());
+            }catch (IOException ex){
+                LOG.error("There where no image present for {}",_id, ex);
             }
-        }else{
-            LOG.error("The requested data for the id {} where not present!", _id);
-            return null;
         }
+        return new byte[0];
+    }
+
+    public String getImage(long _id, HttpServletRequest servletRequest){
+        Optional<MetaData> metaData = metadataRepository.findBy_idAndOwner(_id, getUserFromRequest(servletRequest));
+        if(metaData.isPresent()){
+            try{
+                BufferedImage image = ImageIO.read(new File(metaData.get().path));
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ImageIO.write(image, "jpg", outputStream);
+                return Base64.encode(outputStream.toByteArray());
+            }catch (IOException ex){
+                LOG.error("There where no image present for {}",_id, ex);
+            }
+        }
+        return null;
     }
 
 

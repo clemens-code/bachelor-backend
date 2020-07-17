@@ -50,9 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    //TODO noch in der Arbeit beschreiben was cors ist!
     @Override
     protected void configure(HttpSecurity http)throws Exception{
-        http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.OPTIONS,"/search/all").permitAll()
+        http.csrf().disable().authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/authenticate").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()

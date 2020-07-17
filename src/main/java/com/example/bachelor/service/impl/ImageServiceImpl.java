@@ -7,13 +7,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -50,6 +53,7 @@ public class ImageServiceImpl implements ImageService {
     public byte[] getImage(Path path) throws  IOException{
         Objects.requireNonNull(path,"The Path of the Image can't be null!");
         LOG.info("Trying to read image from System.");
-        return Files.readAllBytes(path);
+        return Base64.getEncoder().encode(Files.readAllBytes(path));
+        //return Files.readAllBytes(path);
     }
 }

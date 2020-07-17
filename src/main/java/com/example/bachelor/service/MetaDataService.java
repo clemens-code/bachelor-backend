@@ -1,7 +1,6 @@
 package com.example.bachelor.service;
 
 import com.example.bachelor.entities.metadata.MetaData;
-import com.example.bachelor.entities.response.ResponseDataWithImageObject;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,14 +49,15 @@ public interface MetaDataService {
      * @param _id - Die ID des gwünschten Objekts.
      * @return - Ein Optional vom Typ MetaData. Dieses muss keinen Inhalt haben
      */
-    Optional<MetaData> getMetaDataById(long _id);
+    public Optional<MetaData> getMetaDataById(long _id, HttpServletRequest servletRequest);
 
     /**
      *
      * @param _id - Die ID des gwünschten Objekts.
      * @return - Ein Objekt von Typ ResponseDataWithImageObject, welches das Bild und die MetaDaten enthält.
      */
-    ResponseDataWithImageObject getMetaDataAndImageForId(long _id);
+
+    byte[] getImageForId(long _id, HttpServletRequest servletRequest);
 
     String getUserFromRequest(HttpServletRequest httpServletRequest);
 }
