@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,15 +29,16 @@ public class InformationControllerTest {
     @Autowired
     ObjectMapper mapper;
 
-    @MockBean
+    @Autowired
     MetadataRepository metadataRepository;
 
-    @MockBean
+    @Autowired
     JwtUtil jwtUtil;
 
     @Test
     public void testAllInfos() throws Exception {
-        mockMvc.perform(get("/search/all").header("Authorization", "Bearer "+jwtUtil.generateToken("Clemens")))
+        String token = "Bearer "+jwtUtil.generateToken("Clemens");
+        mockMvc.perform(get("/search/all").header("Authorization", token))
                 .andExpect(status().isOk())
                 .andExpect(content().string(mapper.writeValueAsString(metadataRepository.findByOwner("Clemens"))));
     }

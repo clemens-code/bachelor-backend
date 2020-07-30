@@ -5,6 +5,7 @@ import com.example.bachelor.entities.metadata.MetaData;
 import com.example.bachelor.service.impl.MetaDataServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,16 @@ public class DataReceiveController {
                               HttpServletRequest servletRequest){
         Objects.requireNonNull(metaDataInformation, "the metadata information is not allowed to be null");
         LOG.info("PUT Request for saving Data.");
-        if(metadataSaveService.saveMetaData(metaDataInformation, Long.parseLong(id), image, servletRequest) != null) {
-            return ResponseEntity.ok().body("Request was processed successfully!");
-        }else{
-            return ResponseEntity.status(400).body("Server failed to process this request. Try later again!");
+        try {
+            MetaData metaData = metadataSaveService.saveMetaData(metaDataInformation, Long.parseLong(id), image, servletRequest);
+            if (metaData != null) {
+                return ResponseEntity.ok().body("Request was processed successfully!");
+            } else {
+                return ResponseEntity.status(400).body("Server failed to process this request. Try later again!");
+            }
+        }catch(UnsupportedOperationException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
         }
-
 
     }
 

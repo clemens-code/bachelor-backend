@@ -1,6 +1,6 @@
 package com.example.bachelor.service.impl;
 
-import com.example.bachelor.entities.metadata.DatabaseSequence;
+import com.example.bachelor.entities.sequence.DatabaseSequence;
 import com.example.bachelor.service.SequenceGenerationService;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Update;

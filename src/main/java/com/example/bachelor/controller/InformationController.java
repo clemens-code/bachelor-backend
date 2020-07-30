@@ -1,7 +1,7 @@
 package com.example.bachelor.controller;
 
 
-import com.example.bachelor.entities.metadata.MetaData;
+import com.example.bachelor.dto.metadata.ReturnMetaData;
 import com.example.bachelor.service.impl.MetaDataServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/search")
 public class InformationController {
@@ -24,26 +25,26 @@ public class InformationController {
 
     private MetaDataServiceImpl metaDataService;
 
-    @CrossOrigin
     @GetMapping(value = "/all")
-    public List<MetaData> allInfos(HttpServletRequest servletRequest)
-    {
+    public List<ReturnMetaData> allInfos(HttpServletRequest servletRequest){
         return metaDataService.getAllMetaData(servletRequest);
     }
 
-    @CrossOrigin
-    @GetMapping(value = "/group/{group}")
-    public List<MetaData> infosByGroup(@PathVariable String group,  HttpServletRequest servletRequest){
+    @GetMapping(value = "/group")
+    public List<ReturnMetaData> infosByGroup(HttpServletRequest servletRequest){
         return metaDataService.getAllMetaDataByGroup(servletRequest);
     }
 
-    @CrossOrigin
+    @GetMapping(value = "/group/{group}")
+    public List<ReturnMetaData> infosByGroupInPath(@PathVariable String group, HttpServletRequest servletRequest){
+        return metaDataService.getAllMetaDataByGroup(group, servletRequest);
+    }
+
     @GetMapping(value = "/id/{id}")
-    public Optional<MetaData> infoById(@PathVariable String id, HttpServletRequest servletRequest){
+    public Optional<ReturnMetaData> infoById(@PathVariable String id, HttpServletRequest servletRequest){
         return metaDataService.getMetaDataById(Long.parseLong(id), servletRequest);
     }
 
-    @CrossOrigin
     @GetMapping(value = "/image/{id}")
     @ResponseBody
     public ResponseEntity<byte[]> infoWithImage(@PathVariable String id, HttpServletRequest servletRequest) {
@@ -52,7 +53,6 @@ public class InformationController {
         return new ResponseEntity<byte[]>(metaDataService.getImageForId(Long.parseLong(id), servletRequest), headers, HttpStatus.OK);
         //return new ResponseEntity<>(metaDataService.getImage(Long.parseLong(id), servletRequest), headers, HttpStatus.OK);
     }
-
 
     @Resource
     public void setMetaDataService(MetaDataServiceImpl metaDataService){

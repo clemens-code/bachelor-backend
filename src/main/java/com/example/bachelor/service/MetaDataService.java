@@ -1,6 +1,8 @@
 package com.example.bachelor.service;
 
+import com.example.bachelor.dto.metadata.ReturnMetaData;
 import com.example.bachelor.entities.metadata.MetaData;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,7 @@ public interface MetaDataService {
      * @param servletRequest - Den ServletRequest um Gruppe und Nutzer zu wissen.
      * @return - Das gespeicherte Metadatenobjekt, dieses kann auch null sein, sollte beim Speichern etwas schiefgehen.
      *              Sollte beim Speichern des Bildes einen Fehler geben wird die IOException gefangen und null returned.
+     * @throws UnsupportedOperationException - Wenn die ID bereits vergeben ist
      */
     MetaData saveMetaData(Object metaDataInformation, long id, MultipartFile image, HttpServletRequest servletRequest);
 
@@ -35,29 +38,66 @@ public interface MetaDataService {
      * @param httpServletRequest - ServletRequest um den Nutzer des Request zu wissen.
      * @return - Eine Liste aller MetaDaten für einen Nutzer.
      */
-    List<MetaData> getAllMetaData(HttpServletRequest httpServletRequest);
+    List<ReturnMetaData> getAllMetaData(HttpServletRequest httpServletRequest);
 
     /**
      *
      * @param httpServletRequest - ServletRequest um den Nutzer und die gewünschte Gruppe des Request zu wissen.
      * @return - Eine Liste aller MetaDaten für eine Gruppe eines Nutzers.
      */
-    List<MetaData> getAllMetaDataByGroup(HttpServletRequest httpServletRequest);
+    List<ReturnMetaData> getAllMetaDataByGroup(HttpServletRequest httpServletRequest);
+
+    /**
+     *
+     * @param group - Die Gruppe, nach der gesucht werden soll
+     * @param httpServletRequest - ServletRequest um den Nutzer und die gewünschte Gruppe des Request zu wissen.
+     * @return - Eine Liste aller MetaDaten für eine Gruppe eines Nutzers.
+     */
+    List<ReturnMetaData> getAllMetaDataByGroup(String group, HttpServletRequest httpServletRequest);
 
     /**
      *
      * @param _id - Die ID des gwünschten Objekts.
      * @return - Ein Optional vom Typ MetaData. Dieses muss keinen Inhalt haben
      */
-    public Optional<MetaData> getMetaDataById(long _id, HttpServletRequest servletRequest);
+    Optional<ReturnMetaData> getMetaDataById(long _id, HttpServletRequest servletRequest);
+
+    /**
+     *
+     * @param _id - Die ID der zulöschenden Entität.
+     * @param servletRequest - Die Informationen der angekommenen Anfrage
+     * @throws IllegalArgumentException - Wenn die Entität nicht existiert
+     * @throws UnsupportedOperationException - Wenn der Nutzer nicht berechtigt ist die Eintität zu löschen
+     * @throws UnknownError - Wenn das Löschen der Entität fehlschlägt
+     * @throws UnknownError - Wenn das Löschen des Bildes fehlschlägt
+     */
+    void deleteEntityByID(long _id, HttpServletRequest servletRequest);
 
     /**
      *
      * @param _id - Die ID des gwünschten Objekts.
      * @return - Ein Objekt von Typ ResponseDataWithImageObject, welches das Bild und die MetaDaten enthält.
      */
-
     byte[] getImageForId(long _id, HttpServletRequest servletRequest);
 
+    /**
+     *
+     * @param metaDataInformation - Die Informationen für ein Update
+     * @param id - Die ID des zu ändernden Objekts
+     * @param image - Das Bild für ein Update
+     * @param servletRequest - Die Informationen der angekommenen Anfrage
+     * @throws IllegalArgumentException - Wenn die Metadateninformationen und das Bild null sind
+     * @throws UnsupportedOperationException - Wenn der Nutzer nicht berechtigt ist diese Aktion durchzuführen
+     */
+    void updateMetaData(Object metaDataInformation, long id,  MultipartFile image,
+                               HttpServletRequest servletRequest);
+
+    /**
+     *
+     * @param httpServletRequest - Die Informationen der angekommenen Anfrage
+     * @return - Den Namen des Nutzers, welcher die Anfrage gesendet hat
+     */
     String getUserFromRequest(HttpServletRequest httpServletRequest);
+
+    ReturnMetaData mapMetaDataOnReturnMetaData(MetaData metaData);
 }

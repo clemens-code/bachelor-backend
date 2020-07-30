@@ -1,6 +1,5 @@
 package com.example.bachelor.controller;
 
-import com.example.bachelor.entities.user.ResponseUser;
 import com.example.bachelor.entities.user.User;
 import com.example.bachelor.security.util.JwtUtil;
 import org.slf4j.Logger;

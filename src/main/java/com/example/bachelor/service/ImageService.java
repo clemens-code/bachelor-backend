@@ -17,4 +17,5 @@ public interface ImageService {
 
     byte[] getImage(Path path) throws IOException;
 
+    void deleteImage(Path path) throws IOException;
 }

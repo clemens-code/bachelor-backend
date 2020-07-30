@@ -56,4 +56,9 @@ public class ImageServiceImpl implements ImageService {
         return Base64.getEncoder().encode(Files.readAllBytes(path));
         //return Files.readAllBytes(path);
     }
+
+    @Override
+    public void deleteImage(Path path) throws IOException{
+        Files.delete(path);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.bachelor.entities.metadata;
+package com.example.bachelor.entities.sequence;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
