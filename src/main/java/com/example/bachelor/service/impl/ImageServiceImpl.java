@@ -53,8 +53,8 @@ public class ImageServiceImpl implements ImageService {
     public byte[] getImage(Path path) throws  IOException{
         Objects.requireNonNull(path,"The Path of the Image can't be null!");
         LOG.info("Trying to read image from System.");
-        return Base64.getEncoder().encode(Files.readAllBytes(path));
-        //return Files.readAllBytes(path);
+        //return Base64.getEncoder().encode(Files.readAllBytes(path));
+        return Files.readAllBytes(path);
     }
 
     @Override
